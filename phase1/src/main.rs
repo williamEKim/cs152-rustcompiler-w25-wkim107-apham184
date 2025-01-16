@@ -72,13 +72,13 @@ fn main() {
 // but Plus, Subtract, Multiply, etc. have no values associated with it.
 #[derive(Debug, Clone)]
 enum Token {
-  Plus,
+  Plus, //
   Subtract,
   Multiply,
   Divide,
   Modulus,
   Assign,
-  Num(i32),
+  Num(i32), //
   Ident(String),
   If,
   While,
@@ -86,7 +86,22 @@ enum Token {
   Func,
   Return,
   Int,
-  End,
+  // Additional Tockens
+  LeftParen,
+  RightParen,
+  LeftCurly,
+  RightCurly,
+  LeftBracket,
+  RightBracket,
+  Less,
+  LessEqual,
+  Greater,
+  GreaterEqual,
+  Equality,
+  NotEqual,
+  // Additional Tockens
+
+  End, //
 }
 
 // In Rust, you can model the function behavior using the type system.
