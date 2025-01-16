@@ -73,8 +73,8 @@ fn main() {
 #[derive(Debug, Clone)]
 enum Token {
   Plus, //
-  Subtract,
-  Multiply,
+  Subtract, //
+  Multiply, //
   Divide,
   Modulus,
   Assign,
@@ -150,6 +150,31 @@ fn lex(code: &str) -> Result<Vec<Token>, String> {
 
     '+' => {
       tokens.push(Token::Plus);
+      i += 1;
+    }
+
+    '-' => {
+      tokens.push(Token::Subtract);
+      i += 1;
+    }
+
+    '*' => {
+      tokens.push(Token::Multiply);
+      i += 1;
+    }
+
+    '/' => {
+      tokens.push(Token::Divide);
+      i += 1;
+    }
+
+    '%' => {
+      tokens.push(Token::Modulus);
+      i += 1;
+    }
+
+    '=' => {
+      tokens.push(Token::Assign);
       i += 1;
     }
 
