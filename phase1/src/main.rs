@@ -82,11 +82,11 @@ enum Token {
   Num(i32), //
   Ident(String),
   If, //
-  While,
-  Read, 
-  Func,
-  Return,
-  Int,
+  While, //
+  Read, //
+  Func, //
+  Return, //
+  Int, //
   // Additional Tockens
   LeftParen,
   RightParen,
@@ -101,9 +101,9 @@ enum Token {
   Equality,
   NotEqual,
 
-  Else,
-  Break,
-  Continue,
+  Else, //
+  Break, //
+  Continue, //
   // Additional Tockens
 
   End, //
