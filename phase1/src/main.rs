@@ -8,6 +8,7 @@ use std::env;
 // used to interact with the file system
 use std::fs;
 
+
 fn main() {
 
     // Let us get commandline arguments and store them in a Vec<String>
@@ -73,33 +74,33 @@ fn main() {
 #[derive(Debug, Clone)]
 enum Token {
   Plus, //
-  Subtract,
-  Multiply,
-  Divide,
-  Modulus,
-  Assign,
+  Subtract, //
+  Multiply, //
+  Divide, //
+  Modulus, //
+  Assign, //
   Num(i32), //
   Ident(String),
-  If,
+  If, //
   While,
   Read, 
   Func,
   Return,
   Int,
-  // Additional Tokens
-  LeftParen, //
-  RightParen, //
-  LeftCurly, //
-  RightCurly, // 
-  LeftBracket, //
-  RightBracket, //
-  Less, //
-  LessEqual, //
-  Greater, //
-  GreaterEqual, //
-  Equality, //
-  NotEqual, //
-  // Additional Tokens
+  // Additional Tockens
+  LeftParen,
+  RightParen,
+  LeftCurly,
+  RightCurly,
+  LeftBracket,
+  RightBracket,
+  Less,
+  LessEqual,
+  Greater,
+  GreaterEqual,
+  Equality,
+  NotEqual,
+  // Additional Tockens
 
   End, //
 }
@@ -148,105 +149,57 @@ fn lex(code: &str) -> Result<Vec<Token>, String> {
       tokens.push(token);
     }
 
+    // Arithmetic Operators
     '+' => {
       tokens.push(Token::Plus);
       i += 1;
     }
 
-    ' ' | '\n' => {
+    '-' => {
+      tokens.push(Token::Subtract);
       i += 1;
     }
 
-    _ => {
-      return Err(format!("Unrecognized symbol '{}'", c));
-    }
-
-    }
-  }
-
-  tokens.push(Token::End);
-  return Ok(tokens);
-}
-
-//this is a lexer that parses parantheses, brackets, inequalities, etc. 
-fn lex(code: &str) -> Result<Vec<Token>, String> {
-  let bytes = code.as_bytes();
-  let mut tokens: Vec<Token> = vec![];
-
-  let mut i = 0;
-  while i < bytes.len() {
-    let c = bytes[i] as char;
-
-    match c {
-
-    // '0'..='9' => {
-    //   let start = i;
-    //   i += 1;
-    //   while i < bytes.len() {
-    //     let digit = bytes[i] as char;
-    //     if digit >= '0' && digit <= '9' {
-    //       i += 1;
-    //     } else {
-    //       break;
-    //     }
-    //   }
-    //   let end = i;
-    //   let string_token = &code[start..end];
-    //   let number_value = string_token.parse::<i32>().unwrap();
-    //   let token = Token::Num(number_value);
-    //   tokens.push(token);
-    // }
-
-    '(' => {
-      tokens.push(Token::LeftParen);
+    '*' => {
+      tokens.push(Token::Multiply);
       i += 1;
     }
 
-    ')' => {
-      tokens.push(Token::RightParen);
+    '/' => {
+      tokens.push(Token::Divide);
       i += 1;
     }
 
-    '{' => {
-      tokens.push(Token::LeftCurly);
+    '%' => {
+      tokens.push(Token::Modulus);
       i += 1;
     }
-    '}' => {
-      tokens.push(Token::RightCurly);
+
+    '=' => {
+      tokens.push(Token::Assign);
       i += 1;
     }
-    '[' => {
-      tokens.push(Token::LeftBracket);
+
+    // ID / Keywords
+    'a'..='z' => {
+      let start = i;
       i += 1;
+      while i < bytes.len() {
+        let identifier = bytes[i] as char;
+        if ( identifier >= 'a' && identifier <= 'z' ) ||
+           ( identifier >= 'A' && identifier <= 'Z' ) ||
+           ( identifier >= '0' && identifier <= '9' ) ||  
+           ( identifier == '_' ){
+          i += 1;
+        } else {
+          break;
+        }
+      }
+      let end = i;
+      let identifier_token = &code[start..end];
+      let token = returnKeyword(identifier_token);
+      tokens.push(token);
     }
-    ']' => {
-      tokens.push(Token::RightBracket);
-      i += 1;
-    }
-    '<' => {
-      tokens.push(Token::Less);
-      i += 1;
-    }
-    '<'  '=' => {
-      tokens.push(Token::LessEqual);
-      i += 1;
-    }
-    '>' => {
-      tokens.push(Token::Greater);
-      i += 1;
-    }
-    // ">=" => {
-    //   tokens.push(Token::GreaterEqual);
-    //   i += 1;
-    // }
-    // "==" => {
-    //   tokens.push(Token::Equality);
-    //   i += 1;
-    // }
-    // "!=" => {
-    //   tokens.push(Token::NotEqual);
-    //   i += 1;
-    // }
 
     ' ' | '\n' => {
       i += 1;
