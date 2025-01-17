@@ -1,0 +1,8 @@
+alias ga='git add'
+  alias gs='git status'
+  alias gb='git branch'
+  alias gc='git checkout'
+  alias gcl='git clone'
+  alias gclr='git clone --recursive'
+  alias gm='git merge'
+alias gl='git log --oneline --decorate --color'
