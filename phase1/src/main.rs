@@ -8,6 +8,7 @@ use std::env;
 // used to interact with the file system
 use std::fs;
 
+
 fn main() {
 
     // Let us get commandline arguments and store them in a Vec<String>
@@ -75,12 +76,12 @@ enum Token {
   Plus, //
   Subtract, //
   Multiply, //
-  Divide,
-  Modulus,
-  Assign,
+  Divide, //
+  Modulus, //
+  Assign, //
   Num(i32), //
   Ident(String),
-  If,
+  If, //
   While,
   Read, 
   Func,
@@ -99,6 +100,10 @@ enum Token {
   GreaterEqual,
   Equality,
   NotEqual,
+
+  Else,
+  Break,
+  Continue,
   // Additional Tockens
 
   End, //
@@ -148,6 +153,7 @@ fn lex(code: &str) -> Result<Vec<Token>, String> {
       tokens.push(token);
     }
 
+    // Arithmetic Operators
     '+' => {
       tokens.push(Token::Plus);
       i += 1;
@@ -178,6 +184,27 @@ fn lex(code: &str) -> Result<Vec<Token>, String> {
       i += 1;
     }
 
+    // ID / Keywords
+    'a'..='z' => {
+      let start = i;
+      i += 1;
+      while i < bytes.len() {
+        let identifier = bytes[i] as char;
+        if ( identifier >= 'a' && identifier <= 'z' ) ||
+           ( identifier >= 'A' && identifier <= 'Z' ) ||
+           ( identifier >= '0' && identifier <= '9' ) ||  
+           ( identifier == '_' ){
+          i += 1;
+        } else {
+          break;
+        }
+      }
+      let end = i;
+      let identifier_token = &code[start..end];
+      let token = returnKeyword(identifier_token);
+      tokens.push(token);
+    }
+
     ' ' | '\n' => {
       i += 1;
     }
@@ -192,6 +219,52 @@ fn lex(code: &str) -> Result<Vec<Token>, String> {
   tokens.push(Token::End);
   return Ok(tokens);
 }
+
+// Functions
+fn returnKeyword(identifier_stream: &str) -> Token {
+  let keyword:Token;
+  // let mut iskey:Bool
+  if identifier_stream == "if" {
+    keyword = Token::If;
+  }
+  else if identifier_stream == "while" {
+    keyword = Token::While;
+  }
+  else if identifier_stream == "read" {
+    keyword = Token::Read;
+  }
+  else if identifier_stream == "func" {
+    keyword = Token::Func;
+  }
+  else if identifier_stream == "return" {
+    keyword = Token::Return;
+  }
+  else if identifier_stream == "func" {
+    keyword = Token::Func;
+  }
+  else if identifier_stream == "int" {
+    keyword = Token::Int;
+  }
+  else if identifier_stream == "else" {
+    keyword = Token::Else;
+  }
+  else if identifier_stream == "break" {
+    keyword = Token::Break;
+  }
+  else if identifier_stream == "continue" {
+    keyword = Token::Continue;
+  }
+  else {
+    keyword = Token::Ident(identifier_stream.to_string());
+  }
+
+  return keyword;
+}
+
+
+
+
+
 
 // writing tests!
 // testing shows robustness in software, and is good for spotting regressions
