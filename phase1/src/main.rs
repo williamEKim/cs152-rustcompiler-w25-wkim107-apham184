@@ -86,20 +86,20 @@ enum Token {
   Func,
   Return,
   Int,
-  // Additional Tockens
-  LeftParen,
-  RightParen,
-  LeftCurly,
-  RightCurly,
-  LeftBracket,
-  RightBracket,
-  Less,
-  LessEqual,
-  Greater,
-  GreaterEqual,
-  Equality,
-  NotEqual,
-  // Additional Tockens
+  // Additional Tokens
+  LeftParen, //
+  RightParen, //
+  LeftCurly, //
+  RightCurly, // 
+  LeftBracket, //
+  RightBracket, //
+  Less, //
+  LessEqual, //
+  Greater, //
+  GreaterEqual, //
+  Equality, //
+  NotEqual, //
+  // Additional Tokens
 
   End, //
 }
@@ -152,6 +152,101 @@ fn lex(code: &str) -> Result<Vec<Token>, String> {
       tokens.push(Token::Plus);
       i += 1;
     }
+
+    ' ' | '\n' => {
+      i += 1;
+    }
+
+    _ => {
+      return Err(format!("Unrecognized symbol '{}'", c));
+    }
+
+    }
+  }
+
+  tokens.push(Token::End);
+  return Ok(tokens);
+}
+
+//this is a lexer that parses parantheses, brackets, inequalities, etc. 
+fn lex(code: &str) -> Result<Vec<Token>, String> {
+  let bytes = code.as_bytes();
+  let mut tokens: Vec<Token> = vec![];
+
+  let mut i = 0;
+  while i < bytes.len() {
+    let c = bytes[i] as char;
+
+    match c {
+
+    // '0'..='9' => {
+    //   let start = i;
+    //   i += 1;
+    //   while i < bytes.len() {
+    //     let digit = bytes[i] as char;
+    //     if digit >= '0' && digit <= '9' {
+    //       i += 1;
+    //     } else {
+    //       break;
+    //     }
+    //   }
+    //   let end = i;
+    //   let string_token = &code[start..end];
+    //   let number_value = string_token.parse::<i32>().unwrap();
+    //   let token = Token::Num(number_value);
+    //   tokens.push(token);
+    // }
+
+    '(' => {
+      tokens.push(Token::LeftParen);
+      i += 1;
+    }
+
+    ')' => {
+      tokens.push(Token::RightParen);
+      i += 1;
+    }
+
+    '{' => {
+      tokens.push(Token::LeftCurly);
+      i += 1;
+    }
+    '}' => {
+      tokens.push(Token::RightCurly);
+      i += 1;
+    }
+    '[' => {
+      tokens.push(Token::LeftBracket);
+      i += 1;
+    }
+    ']' => {
+      tokens.push(Token::RightBracket);
+      i += 1;
+    }
+    '<' => {
+      tokens.push(Token::Less);
+      i += 1;
+    }
+    '<'  '=' => {
+      tokens.push(Token::LessEqual);
+      i += 1;
+    }
+    '>' => {
+      tokens.push(Token::Greater);
+      i += 1;
+    }
+    // ">=" => {
+    //   tokens.push(Token::GreaterEqual);
+    //   i += 1;
+    // }
+    // "==" => {
+    //   tokens.push(Token::Equality);
+    //   i += 1;
+    // }
+    // "!=" => {
+    //   tokens.push(Token::NotEqual);
+    //   i += 1;
+    // }
 
     ' ' | '\n' => {
       i += 1;
