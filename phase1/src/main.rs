@@ -8,6 +8,7 @@ use std::env;
 // used to interact with the file system
 use std::fs;
 
+
 fn main() {
 
     // Let us get commandline arguments and store them in a Vec<String>
@@ -73,14 +74,14 @@ fn main() {
 #[derive(Debug, Clone)]
 enum Token {
   Plus, //
-  Subtract,
-  Multiply,
-  Divide,
-  Modulus,
-  Assign,
+  Subtract, //
+  Multiply, //
+  Divide, //
+  Modulus, //
+  Assign, //
   Num(i32), //
   Ident(String),
-  If,
+  If, //
   While,
   Read, 
   Func,
@@ -166,15 +167,17 @@ fn lex(code: &str) -> Result<Vec<Token>, String> {
           let sym = bytes[i] as char;
           if sym == '=' {
             i += 1;
+            let end = i;
+            let string_token = &code[start..end];
+            //let number_value = string_token.parse::<i32>().unwrap();
+            let token = Token::LessEqual;
+            tokens.push(token);
           } else {
-            break;
+            tokens.push(Token::Less);
+            i += 1;
           }
         }
-        let end = i;
-        let string_token = &code[start..end];
-        //let number_value = string_token.parse::<i32>().unwrap();
-        let token = Token::LessEqual;
-        tokens.push(token);
+       
       }
       // '>' => {
       //   tokens.push(Token::Less);
@@ -187,16 +190,19 @@ fn lex(code: &str) -> Result<Vec<Token>, String> {
           let sym = bytes[i] as char;
           if sym == '=' {
             i += 1;
+            let end = i;
+            let string_token = &code[start..end];
+            //let number_value = string_token.parse::<i32>().unwrap();
+            let token = Token::GreaterEqual;
+            tokens.push(token);
           } else {
-            break;
+            tokens.push(Token::Less);
+            i += 1;
           }
         }
-        let end = i;
-        let string_token = &code[start..end];
-        //let number_value = string_token.parse::<i32>().unwrap();
-        let token = Token::GreaterEqual;
-        tokens.push(token);
+      
       }
+      
       '=' => {
         let start = i;
         i += 1;
@@ -232,13 +238,63 @@ fn lex(code: &str) -> Result<Vec<Token>, String> {
         tokens.push(token);
       }
       
+    // Arithmetic Operators
+    '+' => {
+      tokens.push(Token::Plus);
+      i += 1;
+    }
 
+    '-' => {
+      tokens.push(Token::Subtract);
+      i += 1;
+    }
 
-      ' ' | '\n' => {
-        i += 1;
+    '*' => {
+      tokens.push(Token::Multiply);
+      i += 1;
+    }
+
+    '/' => {
+      tokens.push(Token::Divide);
+      i += 1;
+    }
+
+    '%' => {
+      tokens.push(Token::Modulus);
+      i += 1;
+    }
+
+    '=' => {
+      tokens.push(Token::Assign);
+      i += 1;
+    }
+
+    // ID / Keywords
+    'a'..='z' => {
+      let start = i;
+      i += 1;
+      while i < bytes.len() {
+        let identifier = bytes[i] as char;
+        if ( identifier >= 'a' && identifier <= 'z' ) ||
+           ( identifier >= 'A' && identifier <= 'Z' ) ||
+           ( identifier >= '0' && identifier <= '9' ) ||  
+           ( identifier == '_' ){
+          i += 1;
+        } else {
+          break;
+        }
       }
+      let end = i;
+      let identifier_token = &code[start..end];
+      let token = returnKeyword(identifier_token);
+      tokens.push(token);
+    }
 
-      _ => {
+    ' ' | '\n' => {
+      i += 1;
+    }
+
+      '_' => {
         return Err(format!("Unrecognized symbol '{}'", c));
       }
 
