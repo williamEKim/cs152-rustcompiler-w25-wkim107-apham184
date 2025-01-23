@@ -155,10 +155,10 @@ fn lex(code: &str) -> Result<Vec<Token>, String> {
         tokens.push(Token::RightBracket);
         i += 1;
       }
-      '<' => {
-        tokens.push(Token::Less);
-        i += 1;
-      }
+      // '<' => {
+      //   tokens.push(Token::Less);
+      //   i += 1;
+      // }
       '<' => {
         let start = i;
         i += 1;
@@ -176,10 +176,10 @@ fn lex(code: &str) -> Result<Vec<Token>, String> {
         let token = Token::LessEqual;
         tokens.push(token);
       }
-      '>' => {
-        tokens.push(Token::Less);
-        i += 1;
-      }
+      // '>' => {
+      //   tokens.push(Token::Less);
+      //   i += 1;
+      // }
       '>' => {
         let start = i;
         i += 1;
