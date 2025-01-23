@@ -232,7 +232,7 @@ fn lex(code: &str) -> Result<Vec<Token>, String> {
         tokens.push(token);
       }
       
-      
+
 
       ' ' | '\n' => {
         i += 1;
